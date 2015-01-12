@@ -12,3 +12,7 @@ If you click on the label you get a permalink for the item. If you click the twi
 
 Click on the Info icon to see the About box.
 
+#### Demo
+
+Here's the <a href="http://listicle.io/demo/">demo listicle</a>. 
+
