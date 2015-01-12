@@ -1,0 +1,347 @@
+<html>
+	<head>
+		<title>listicle.io</title>  
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="http://fargo.io/code/jquery-1.9.1.min.js"></script><link href="http://fargo.io/code/bootstrap.css" rel="stylesheet"><script src="http://fargo.io/code/bootstrap.min.js"></script><link rel="stylesheet" href="http://fargo.io/code/fontAwesome/css/font-awesome.min.css"/><link href="http://fargo.io/code/ubuntuFont.css" rel="stylesheet" type="text/css"><link href="http://fargo.io/code/ranchoFont.css" rel="stylesheet" type="text/css"><script src="http://fargo.io/code/node/shared/utils.js"></script><script src="http://fargo.io/code/node/shared/alertdialog.js"></script><script src="http://fargo.io/code/node/shared/confirmdialog.js"></script><script src="http://fargo.io/code/node/shared/askdialog.js"></script><script src="http://fargo.io/code/shared/twitter.js"></script><script src="http://fargo.io/code/strftime.js"></script><script src="http://fargo.io/code/shared/ga.js"></script><script src="http://fargo.io/code/shared/app.js"></script><script src="http://fargo.io/code/shared/menus.js"></script><link href="http://fargo.io/code/shared/menus.css" rel="stylesheet" type="text/css"><link href="http://fargo.io/code/shared/app.css" rel="stylesheet" type="text/css"><script src="http://fargo.io/code/shared/appprefs.js"></script><script src="http://fargo.io/code/shared/beep.js"></script>
+		<!-- Facebook metadata -->
+			<meta property="og:url" content="http://listicle.io/cluetrain/" />
+			<meta property="og:type" content="website" />
+			<meta property="og:title" content="The Clutrain Listicle" />
+			<meta property="og:description" content="Lists are great! Why should linkbaiters have all the fun. What about you and me?" />
+			<meta property="og:image" content="http://static.scripting.com/larryKing/images/2015/01/02/armadilloBike.jpg" />
+			<meta property="og:site_name" content="listicle.io" />
+		<script>
+			var appConsts = {
+				domain: "listicle.io",
+				version: "0.47"
+				};
+			var appPrefs = {
+				ixCurrentClue: 1 //1-based index into the clues array
+				};
+			
+			var jsonUrl = "list.json";
+			var theData; 
+			
+			var whenLastUserAction;
+			
+			
+			function restorePrefs () {
+				if (localStorage.listiclePrefs != undefined) {
+					console.log ("restorePrefs: " + localStorage.listiclePrefs);
+					appPrefs = JSON.parse (localStorage.listiclePrefs);
+					}
+				}
+			function savePrefs () {
+				localStorage.listiclePrefs = jsonStringify (appPrefs);
+				}
+			function updateArrows () {
+				var normalcolor = "white", disabledcolor = "gray";
+				var leftarrowcolor, rightarrowcolor;
+				
+				if (appPrefs.ixCurrentClue == 1) {
+					leftarrowcolor = disabledcolor;
+					}
+				else {
+					leftarrowcolor = normalcolor;
+					}
+				
+				if (appPrefs.ixCurrentClue == theData.items.length) {
+					rightarrowcolor = disabledcolor;
+					}
+				else {
+					rightarrowcolor = normalcolor;
+					}
+				
+				$("#idLeftArrow").css ("color", leftarrowcolor);
+				$("#idRightArrow").css ("color", rightarrowcolor);
+				}
+			function showClue (ix) { //ix is 1-based
+				//keep ix in bounds -- 1/6/15 by DW
+					if (ix < 1) {
+						ix = 1;
+						}
+					if (ix > theData.items.length) {
+						ix = theData.items.length;
+						}
+				var permalink = "?clue=" + ix;
+				$("#idClueLink").html ("<a href=\"" + permalink + "\">" + theData.itemLabel + " #" + ix + ":</a>");
+				$("#idListicleText").html (theData.items [ix - 1]);
+				appPrefs.ixCurrentClue = ix;
+				updateArrows ();
+				savePrefs ();
+				}
+			function twitterIconClick () {
+				
+				var url = window.location.href;
+				if (stringContains (url, "?")) {
+					url = stringNthfield (url, "?", 1);
+					}
+				url += "?clue=" + appPrefs.ixCurrentClue;
+				
+				var text = encodeURIComponent (theData.itemLabel + " #" + appPrefs.ixCurrentClue + ": " + theData.items [appPrefs.ixCurrentClue - 1] + " " + url);
+				window.open ("https://twitter.com/intent/tweet?text=" + text, "_blank", "left=200,top=300,location=no,height=350,width=600,scrollbars=no,status=no");
+				}
+			function prevClue () {
+				if (appPrefs.ixCurrentClue > 1) {
+					showClue (appPrefs.ixCurrentClue - 1);
+					}
+				else {
+					speakerBeep ();
+					}
+				}
+			function nextClue () {
+				if (appPrefs.ixCurrentClue < theData.items.length) {
+					showClue (appPrefs.ixCurrentClue + 1);
+					}
+				else {
+					speakerBeep ();
+					}
+				}
+			function infoIconClick () {
+				alertDialog (theData.about);
+				}
+			function homeIconClick () {
+				showClue (1);
+				}
+			function everySecond () {
+				pingGoogleAnalytics ();
+				}
+			function startup () {
+				console.log ("startup");
+				$("#idVersionNumber").html ("v" + appConsts.version);
+				restorePrefs ();
+				readHttpFile (jsonUrl, function (s) {
+					theData = JSON.parse (s);
+					
+					console.log ("startup: " + theData.items.length + " items in theData.items.");
+					
+					var ixclue = appPrefs.ixCurrentClue;
+					var clueparam = getURLParameter ("clue");
+					if (clueparam != "null") {
+						ixclue = Number (clueparam);
+						if (ixclue < 1) {
+							ixclue = 1;
+							}
+						if (ixclue > theData.items.length) {
+							ixclue = theData.items.length;
+							}
+						}
+					showClue (ixclue);
+					
+					$("#idBackgroundImage").css ("background-image", "url(" + theData.urlBackgroundImage + ")");
+					
+					if (theData.opacityBackground != undefined) {
+						$("#idOverlay").css ("opacity", theData.opacityBackground);
+						}
+					
+					
+					var rtlink = "<span class=\"spInfoLink\"><a onclick=\"twitterIconClick ()\" title=\"Send this clue to your Twitter followers.\"><i class=\"fa fa-twitter\"></i></a></span>"
+					var infolink = "<span class=\"spInfoLink\"><a onclick=\"infoIconClick ()\"><i class=\"fa fa-info-circle\"></i></a></span>";
+					var homelink = "<span class=\"spHomeLink\"><a onclick=\"homeIconClick ()\"><i class=\"fa fa-home\"></i></a></span>";
+					var titlelink =  "<a href=\"" + theData.link + "\" target=\"_blank\">" + theData.title + "</a>."
+					
+					if (theData.author.name != undefined) {
+						titlelink = theData.author.name + ": " + titlelink;
+						}
+					
+					$("#idTitle").html (homelink + titlelink + infolink + rtlink);
+					$("body").keyup (function (ev) {
+						switch (ev.which) {
+							case 37: //left arrow
+								prevClue ();
+								break;
+							case 39: //right arrow
+								nextClue ();
+								break;
+							}
+						});
+					self.setInterval (function () {everySecond ()}, 1000); 
+					hitCounter (); 
+					initGoogleAnalytics (); 
+					});
+				}
+			</script>
+		<style>
+			body {
+				font-family: Ubuntu;
+				font-size: 18px;
+				background-color: whitesmoke;
+				}
+			.divTextContainer {
+				padding: 0;
+				}
+			.divBackgroundImage {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				margin-left: 0;
+				margin-top: 0;
+				border-top: 1px solid silver;
+				z-index: 10;
+				
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				}
+			.divOverlay {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				margin-left: 0;
+				margin-top: 0;
+				z-index: 20;
+				background-color: black;
+				opacity: 0.5;
+				}
+			.divListicleBody {
+				position: relative;
+				
+				width: 60%;
+				margin-left: auto;
+				margin-right: auto;
+				
+				z-index: 30;
+				}
+			.divListicleControls {
+				margin-top: 20px;
+				font-size: 18px;
+				}
+			.divListicleControls a {
+				color: white;
+				cursor: pointer;
+				}
+			.divArrow {
+				font-size: 24px;
+				}
+			.divTitle {
+				color: white;
+				font-size: 16px;
+				}
+			.divListicleText {
+				font-size: 42px;
+				color: white;
+				text-shadow: 1px 1px black;
+				line-height: 110%;
+				
+				padding-bottom: 10%;
+				}
+			.divClueLink {
+				font-size: 24px;
+				margin-bottom: 10px;
+				}
+			.divClueLink a {
+				color: white;
+				cursor: pointer;
+				text-decoration: none;
+				text-shadow: 1px 1px black;
+				}
+			
+			.divFooter {
+				color: silver;
+				font-size: 14px;
+				height: 6em;
+				padding-left: 5em;
+				padding-right: 5em;
+				position: fixed;
+				bottom: 0;
+				margin-left: auto;
+				margin-right: auto;
+				z-index: 30;
+				}
+			.divFooter a {
+				cursor: pointer;
+				color: silver;
+				}
+			
+			.divClueAndText {
+				margin-top: 20%;
+				}
+			.spInfoLink {
+				margin-left: .5em;
+				}
+			.spHomeLink {
+				margin-right: .5em;
+				}
+			.divVersionNumber {
+				color: silver;
+				font-size: 14px;
+				height: 2em;
+				padding-right: 1em;
+				position: fixed;
+				bottom: 0;
+				margin-left: 95%;
+				z-index: 30;
+				}
+			
+			</style>
+		<style> /* styles for phone */
+			@media only screen 
+			and (min-device-width : 320px) 
+			and (max-device-width : 480px) {
+				.divListicleBody {
+					width: 95%;
+					}
+				.divClueLink {
+					font-size: 16px;
+					text-shadow: none;
+					}
+				.divListicleText {
+					font-size: 22px;
+					text-shadow: none;
+					}
+				.divClueAndText {
+					width: 80%;
+					margin-left: auto;
+					margin-right: auto;
+					line-height: 105%;
+					margin-top: 15%;
+					}
+				.divListicleControls {
+					margin-top: 10px;
+					font-size: 16px;
+					}
+				.divFooter {
+					padding-left: 1em;
+					padding-right: 1em;
+					font-size: 12px;
+					line-height: 100%;
+					}
+				}
+			</style>
+		</head>
+	<body>
+		<div class="divVersionNumber" id="idVersionNumber">
+			</div>
+		<div class="divTextContainer" id="idTextContainer">
+			<div class="divBackgroundImage" id="idBackgroundImage">
+				<div class="divOverlay" id="idOverlay"></div>
+				<div class="divListicleBody">
+					<div class="divListicleControls">
+						<div class="divArrow" style="float: right;"><a onclick="nextClue ()"><i class="fa fa-arrow-right" id="idRightArrow"></i></a></div>
+						<div class="divArrow" style="float: left;"><a onclick="prevClue ()"><i class="fa fa-arrow-left" id="idLeftArrow"></i></a></div>
+						<center><div class="divTitle" id="idTitle"></div></center>
+						<div class="divArrows">
+							</div>
+						</div>
+					
+					<div class="divClueAndText">
+						<div class="divClueLink" id="idClueLink">
+							</div>
+						<div class="divListicleText" id="idListicleText">
+							</div>
+						</div>
+					
+					</div>
+				</div>
+			</div>
+		<script>
+			$(document).ready (function () {
+				startup ();
+				});
+			</script>
+		</body>
+	</html>
