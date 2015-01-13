@@ -14,6 +14,10 @@ If you click on the label you get a permalink for the item. If you click the twi
 
 Click on the Info icon to see the About box.
 
+#### Updates
+
+v0.51 -- 1/13/15 by DW -- you can now include Emojis in listicle items using the <a href="http://www.emoji-cheat-sheet.com/">Emoji cheat sheet</a> codes.  For example, if you include :kiss: in an item it'll show up as the kiss emoji. <a href="http://listicle.io/demo/?clue=10">Example</a>.
+
 #### Demo
 
 Here's the <a href="http://listicle.io/demo/">demo listicle</a>. 

@@ -12,11 +12,12 @@
 		<script src="http://fargo.io/code/node/shared/utils.js"></script>
 		<script src="http://fargo.io/code/node/shared/alertdialog.js"></script>
 		<script src="http://fargo.io/code/shared/beep.js"></script>
+		<script src="http://fargo.io/code/shared/emojify.js"></script>
 		
 		<script>
 			var appConsts = {
 				domain: "listicle.io",
-				version: "0.50"
+				version: "0.51"
 				};
 			var appPrefs = {
 				ixCurrentClue: 1 //1-based index into the clues array
@@ -65,9 +66,9 @@
 					if (ix > theData.items.length) {
 						ix = theData.items.length;
 						}
-				var permalink = "?clue=" + ix;
+				var permalink = "?clue=" + ix, cluetext = emojiProcess (theData.items [ix - 1]);
 				$("#idClueLink").html ("<a href=\"" + permalink + "\">" + theData.itemLabel + " #" + ix + ":</a>");
-				$("#idListicleText").html (theData.items [ix - 1]);
+				$("#idListicleText").html (cluetext);
 				appPrefs.ixCurrentClue = ix;
 				updateArrows ();
 				savePrefs ();
