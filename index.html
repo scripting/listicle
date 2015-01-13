@@ -16,7 +16,7 @@
 		<script>
 			var appConsts = {
 				domain: "listicle.io",
-				version: "0.48"
+				version: "0.49"
 				};
 			var appPrefs = {
 				ixCurrentClue: 1 //1-based index into the clues array
@@ -139,7 +139,7 @@
 					var rtlink = "<span class=\"spInfoLink\"><a onclick=\"twitterIconClick ()\" title=\"Send this clue to your Twitter followers.\"><i class=\"fa fa-twitter\"></i></a></span>"
 					var infolink = "<span class=\"spInfoLink\"><a onclick=\"infoIconClick ()\"><i class=\"fa fa-info-circle\"></i></a></span>";
 					var homelink = "<span class=\"spHomeLink\"><a onclick=\"homeIconClick ()\"><i class=\"fa fa-home\"></i></a></span>";
-					var titlelink =  "<a href=\"" + theData.link + "\" target=\"_blank\">" + theData.title + "</a>."
+					var titlelink =  "<a href=\"" + theData.link + "\" target=\"_blank\">" + theData.title + "</a>"
 					
 					if (theData.author.name != undefined) {
 						titlelink = theData.author.name + ": " + titlelink;
