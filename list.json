@@ -3,7 +3,7 @@
 	"link": "http://scripting.com/2015/01/08/aCluetrainListicle.html",
 	"about": "This is a demo listicle. Just playing around. Dave",
 	"urlBackgroundImage": "http://static.scripting.com/larryKing/images/2014/10/25/autumnColors.jpg",
-	"opacityBackground": "0.25",
+	"opacityBackground": "0.4",
 	"itemLabel": "Idea",
 	"author": {
 		"name": "Dave Winer",
@@ -15,6 +15,7 @@
 		"For the next sixty seconds.",
 		"This station will conduct a test.",
 		"Of the listicle broadcast system.",
+		"<a href=\"https://github.com/scripting/listicle\">https://github.com/scripting/listicle</a>",
 		"Had this been an actual listicle.",
 		"You would have been inspired.",
 		":-)"
