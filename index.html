@@ -31,8 +31,12 @@
 				if (localStorage.listiclePrefs != undefined) {
 					console.log ("restorePrefs: " + localStorage.listiclePrefs);
 					appPrefs = JSON.parse (localStorage.listiclePrefs);
-					}
+				} else if (location.hash !== '') {
+					appPrefs.ixCurrentClue = parseInt(location.hash.substr(1), 10);
+					savePrefs();
+					restorePrefs();
 				}
+			}
 			function savePrefs () {
 				localStorage.listiclePrefs = jsonStringify (appPrefs);
 				}
@@ -71,6 +75,8 @@
 				appPrefs.ixCurrentClue = ix;
 				updateArrows ();
 				savePrefs ();
+				location.hash = ix;
+
 				}
 			function twitterIconClick () {
 				
