@@ -16,7 +16,7 @@
 		<script>
 			var appConsts = {
 				domain: "listicle.io",
-				version: "0.49"
+				version: "0.50"
 				};
 			var appPrefs = {
 				ixCurrentClue: 1 //1-based index into the clues array
@@ -76,11 +76,12 @@
 				
 				var url = window.location.href;
 				if (stringContains (url, "?")) {
-					url = stringNthfield (url, "?", 1);
+					url = stringNthField (url, "?", 1);
 					}
 				url += "?clue=" + appPrefs.ixCurrentClue;
 				
-				var text = encodeURIComponent (theData.itemLabel + " #" + appPrefs.ixCurrentClue + ": " + theData.items [appPrefs.ixCurrentClue - 1] + " " + url);
+				var cluetext = stripMarkup (theData.items [appPrefs.ixCurrentClue - 1]);
+				var text = encodeURIComponent (theData.itemLabel + " #" + appPrefs.ixCurrentClue + ": " + cluetext + " " + url);
 				window.open ("https://twitter.com/intent/tweet?text=" + text, "_blank", "left=200,top=300,location=no,height=350,width=600,scrollbars=no,status=no");
 				}
 			function prevClue () {
