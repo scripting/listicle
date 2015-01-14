@@ -16,6 +16,8 @@ Click on the Info icon to see the About box.
 
 #### Updates
 
+v0.52 -- 1/14/15 by DW -- Made a change to how prefs are stored in localStorage, so you can have more than one listicle on a domain without having their prefs collide.
+
 v0.51 -- 1/13/15 by DW -- you can now include Emojis in listicle items using the <a href="http://www.emoji-cheat-sheet.com/">Emoji cheat sheet</a> codes. <a href="http://listicle.io/demo/?clue=10">Example</a>.
 
 #### Demo
