@@ -27,10 +27,12 @@
 			var theData; 
 			
 			function restorePrefs () {
+				console.log ("restorePrefs: " + localStorage.listiclePrefsForAll);
 				if (localStorage.listiclePrefsForAll != undefined) {
 					var allPrefs = JSON.parse (localStorage.listiclePrefsForAll);
-					console.log ("restorePrefs: " + localStorage.listiclePrefsForAll);
-					appPrefs = JSON.parse (allPrefs [window.location.href]);
+					if (allPrefs [window.location.href] != undefined) {
+						appPrefs = JSON.parse (allPrefs [window.location.href]);
+						}
 					}
 				else {
 					if (localStorage.listiclePrefs != undefined) {
