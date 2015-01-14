@@ -17,7 +17,7 @@
 		<script>
 			var appConsts = {
 				domain: "listicle.io",
-				version: "0.51"
+				version: "0.52"
 				};
 			var appPrefs = {
 				ixCurrentClue: 1 //1-based index into the clues array
@@ -26,16 +26,31 @@
 			var jsonUrl = "list.json";
 			var theData; 
 			
-			var whenLastUserAction;
-			
 			function restorePrefs () {
-				if (localStorage.listiclePrefs != undefined) {
-					console.log ("restorePrefs: " + localStorage.listiclePrefs);
-					appPrefs = JSON.parse (localStorage.listiclePrefs);
+				if (localStorage.listiclePrefsForAll != undefined) {
+					var allPrefs = JSON.parse (localStorage.listiclePrefsForAll);
+					console.log ("restorePrefs: " + localStorage.listiclePrefsForAll);
+					appPrefs = JSON.parse (allPrefs [window.location.href]);
+					}
+				else {
+					if (localStorage.listiclePrefs != undefined) {
+						console.log ("restorePrefs: " + localStorage.listiclePrefs);
+						appPrefs = JSON.parse (localStorage.listiclePrefs);
+						}
 					}
 				}
 			function savePrefs () {
-				localStorage.listiclePrefs = jsonStringify (appPrefs);
+				var allPrefs;
+				if (localStorage.listiclePrefsForAll != undefined) {
+					allPrefs = JSON.parse (localStorage.listiclePrefsForAll);
+					}
+				else {
+					allPrefs = new Object ();
+					}
+				allPrefs [window.location.href] = JSON.stringify (appPrefs); //no formatting
+				localStorage.listiclePrefsForAll = jsonStringify (allPrefs);
+				console.log ("savePrefs: " + localStorage.listiclePrefsForAll);
+				
 				}
 			function updateArrows () {
 				var normalcolor = "white", disabledcolor = "gray";
