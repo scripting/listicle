@@ -23,7 +23,7 @@ Click on the Info icon to see the About box.
 * Use the second sheet (listicleItems) to add items - Don't delete or change the first row (item). Each cell below 'item' will become an item in the listicle. HTML a tags are okay to use.
 * Go to File > Publish to web and publish the entire document. Copy the key for the published document: e.g., htt<span>ps</span>://docs.google.com/spreadsheets/d/**_1F32wnm84XEuswNBRONKqePhpzZaAx6cSz0STT9VPofo_**/pubhtml
 * Browse to where you setup the index.html file and add ?sheetKey=**_key_** to the end of the url.
-..* If you want to test without installing on a server, you can try ht<span>tp</span>://juddtech.com/listicle/?sheetKey=**_key_**
+  * If you want to test without installing on a server, you can try ht<span>tp</span>://juddtech.com/listicle/?sheetKey=**_key_**
  
 Because it's a Google spreadsheet, you can invite other collaborators to add items to the list!
 
