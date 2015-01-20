@@ -21,9 +21,9 @@ Click on the Info icon to see the About box.
 * Make a copy of the <a href="https://docs.google.com/spreadsheets/d/1F32wnm84XEuswNBRONKqePhpzZaAx6cSz0STT9VPofo/edit?usp=sharing">published Google spreadsheet</a>. (You need to be logged in to Google Drive to make a copy.
 * Use the first sheet (Set Preferences) to change the listicle settings
 * Use the second sheet (listicleItems) to add items - Don't delete or change the first row (item). Each cell below 'item' will become an item in the listicle. HTML a tags are okay to use.
-* Go to File > Publish to web and publish the entire document. Copy the key for the published document: e.g., https://docs.google.com/spreadsheets/d/**__1F32wnm84XEuswNBRONKqePhpzZaAx6cSz0STT9VPofo__**/pubhtml
-* Browse to where you setup the index.html file and add ?sheetKey=**__key__** to the end of the url.
-..* If you want to test without installing on a server, you can try http://juddtech.com/listicle/?sheetKey=**__key__**
+* Go to File > Publish to web and publish the entire document. Copy the key for the published document: e.g., https://docs.google.com/spreadsheets/d/**_1F32wnm84XEuswNBRONKqePhpzZaAx6cSz0STT9VPofo_**/pubhtml
+* Browse to where you setup the index.html file and add ?sheetKey=**_key_** to the end of the url.
+..* If you want to test without installing on a server, you can try http://juddtech.com/listicle/?sheetKey=**_key_**
  
 Because it's a Google spreadsheet, you can invite other collaborators to add items to the list!
 
