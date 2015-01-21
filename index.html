@@ -13,7 +13,6 @@
 		<script src="http://fargo.io/code/node/shared/alertdialog.js"></script>
 		<script src="http://fargo.io/code/shared/beep.js"></script>
 		<script src="http://fargo.io/code/shared/emojify.js"></script>
-		<script type="text/javascript" src="tabletop.js"></script>
 		
 		<script>
 			var appConsts = {
@@ -26,8 +25,6 @@
 			
 			var jsonUrl = "list.json";
 			var theData; 
-			var tabletop;
-			var sheetKey = '1F32wnm84XEuswNBRONKqePhpzZaAx6cSz0STT9VPofo'; //Set default key
 			
 			function restorePrefs () {
 				console.log ("restorePrefs: " + localStorage.listiclePrefsForAll);
@@ -99,7 +96,7 @@
 				if (stringContains (url, "?")) {
 					url = stringNthField (url, "?", 1);
 					}
-				url += "?clue=" + appPrefs.ixCurrentClue + '&sheetKey=' + sheetKey;
+				url += "?clue=" + appPrefs.ixCurrentClue;
 				
 				var cluetext = stripMarkup (theData.items [appPrefs.ixCurrentClue - 1]);
 				var text = encodeURIComponent (theData.itemLabel + " #" + appPrefs.ixCurrentClue + ": " + cluetext + " " + url);
@@ -129,44 +126,13 @@
 				}
 			function everySecond () {
 				}
-			// return a parameter value from the current URL
-			function getParam ( sname )
-			{
-			  var params = location.search.substr(location.search.indexOf("?")+1);
-			  var sval = "";
-			  params = params.split("&");
-			    // split param and value into individual pieces
-			    for (var i=0; i<params.length; i++)
-			       {
-			         temp = params[i].split("=");
-			         if ( [temp[0]] == sname ) { sval = temp[1]; }
-			       }
-			  return sval;
-			}
 			function startup () {
 				console.log ("startup");
-				
-				if (stringContains (location.search, "sheetKey")) {
-					sheetKey = getParam('sheetKey');
-					}
 				$("#idVersionNumber").html ("v" + appConsts.version);
 				restorePrefs ();
-				// Read items from Google Sheets before processing
-				tabletop = Tabletop.init( { key: sheetKey,
-                         callback: setList,
-                         simpleSheet: false,
-						 wanted: ["listicleItems", "prefs"],
-						 debug: true } );
-				}
-				
-				function setList(tabletop){
-					console.log('setList');
-					theData = tabletop.prefs.elements[0];
-					theData.items = [];
-					// Copy items from Tabletop data array to theData.items array
-					for (i = 0; i < tabletop.listicleItems.elements.length; i++) { 
-					    theData.items[i] = tabletop.listicleItems.elements[i].item;
-					}
+				readHttpFile (jsonUrl, function (s) {
+					theData = JSON.parse (s);
+					
 					console.log ("startup: " + theData.items.length + " items in theData.items.");
 					
 					var ixclue = appPrefs.ixCurrentClue;
@@ -194,8 +160,8 @@
 					var homelink = "<span class=\"spHomeLink\"><a onclick=\"homeIconClick ()\"><i class=\"fa fa-home\"></i></a></span>";
 					var titlelink =  "<a href=\"" + theData.link + "\" target=\"_blank\">" + theData.title + "</a>"
 					
-					if (theData.authorName != undefined) {
-						titlelink = theData.authorName + ": " + titlelink;
+					if (theData.author.name != undefined) {
+						titlelink = theData.author.name + ": " + titlelink;
 						}
 					
 					$("#idTitle").html (homelink + titlelink + infolink + rtlink);
@@ -209,7 +175,8 @@
 								break;
 							}
 						});
-					self.setInterval (function () {everySecond ()}, 1000);
+					self.setInterval (function () {everySecond ()}, 1000); 
+					});
 				}
 			</script>
 		<style>
