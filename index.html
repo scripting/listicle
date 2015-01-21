@@ -13,6 +13,7 @@
 		<script src="http://fargo.io/code/node/shared/alertdialog.js"></script>
 		<script src="http://fargo.io/code/shared/beep.js"></script>
 		<script src="http://fargo.io/code/shared/emojify.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		
 		<script>
 			var appConsts = {
@@ -175,6 +176,13 @@
 								break;
 							}
 						});
+					//Add swipe to change clues - depends on jQuery mobile
+					$("#idTextContainer").on("swipeleft",function(){
+					  nextClue ();
+					});
+					$("#idTextContainer").on("swiperight",function(){
+					  prevClue ();
+					});
 					self.setInterval (function () {everySecond ()}, 1000); 
 					});
 				}
